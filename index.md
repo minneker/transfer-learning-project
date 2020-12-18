@@ -86,6 +86,18 @@ We chose the first option because it is common practice in transfer learning to 
 
 ### Data collection and preparation
 
+We used two Parkinson's spiral datasets as described earlier: [UCI Machine Learning repository PD spiral dataset](https://archive.ics.uci.edu/ml/datasets/Parkinson+Disease+Spiral+Drawings+Using+Digitized+Graphics+Tablet) and this Kaggle [dataset](https://www.kaggle.com/kmader/parkinsons-drawings). The Kaggle dataset came fully prepared as images, however, the UCI dataset came as text files. We needed to extract the relevant information from the files and then plot the spirals to be used as input to the neural networks. You may see the data prepartion notebook in the main repo if you are interested in this process. Once combined, we randomly split the data into training (70%), validation (15%) and testing (15%). The following table summarizes the number of files in each category (Control and People with Parkinson's (PwP)):
+
+- Training
+  - Control: 48
+  - PwP: 54
+- Validation
+  - Control: 9
+  - PwP: 11
+- Testing
+  - Control: 9
+  - PwP: 11
+
 ### Training setup 
 
 ### Evaluation metrics

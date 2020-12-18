@@ -12,7 +12,9 @@ The following sections summarize the results obtained by training a subset of po
 
 ## Related Work
 
-Other people are out there doing things. What did they do? Was it good? Was it bad? Talk about it here.
+Other's have approached the problem of PD spiral classification, however, they have done so with some key differences than the work presented here. [One study](https://ieeexplore.ieee.org/document/8064621), used a digital tablet to track various quantities of an individual's penmanship such as "angular features" (the angle of the pen to the tablet surface) and "direction inversion" (a measure of the change in angular features). The collection of features were then used to calculate a Spearman rank correlation coefficient, which supported the use of hand-drawn spirals for the detection of PD. This study did not provide a method of classification, but rather showed that features extracted from spirals are sufficient to distinguish people with and without PD.
+
+[Another study](https://www.mdpi.com/2079-9292/8/8/907), directly investigated the use of CNNs for classification of PD spirals (I used their dataset!). The major difference of this work to the project presented here, is that they used frequency spectra (spectrograms) as input to the CNN rather than raw images. The researchers were able to create spectrograms because they collected data on a specialized tablet as well as the first study mentioned, rather than static images. The idea here is that tremors will become more apparent in the frequency domain, so the spectra are better inputs than raw images. Their results support this hypothesis as they achieved an accuracy of 96.5%, a F1-score of 97.7% and an area under the curve of 99.2%. This is the gold-standard performance to beat that I could find. The downside here is that patients would need access to a specialized tablet, which would likely require a normal doctor's office visit. This project aims to study the possibility of achieve such performance using only the static images of PD spirals rather than the spectra.
 
 ## Approach
 

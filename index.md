@@ -18,6 +18,16 @@ Other's have approached the problem of PD spiral classification, however, they h
 
 ## Approach
 
+We trained and compared 3 popular CNN-based architectures: ResNet-50, VGG-16 (with batch norm), and Inception_v3 (a.k.a. GoogleNetv3) on the task of PD spiral classification. We chose these architectures based their popularity and performance classifying on large image dataset such as ImageNet. The general approach was to use the pretrained network weights, and then train the final fully-connected layer from scratch on our training dataset. This is a common approach when using deep nets in practice/industry, we also explored training more than the final layer in some cases (more details on this later). We combined two Parkinson's spiral datasets: [UCI Machine Learning repository PD spiral dataset](https://archive.ics.uci.edu/ml/datasets/Parkinson+Disease+Spiral+Drawings+Using+Digitized+Graphics+Tablet) and this Kaggle [dataset](https://www.kaggle.com/kmader/parkinsons-drawings). The Kaggle dataset was ready to use as-is, however, the UCI dataset needed significant cleaning and plotting to get into image format. We mixed the datasets and then randomly partitioned them into 70% training, 15% validation and 15% testing. We trained each model for 25 epochs, evaluating on the validation set after each epoch, and we saved the best performing model based on the validation set for final evaluation on the test set. We created graphs of training/validation loss and accuracy over the epochs. When evaluating the best performing models on the test set we computed accuracy, F1 score, precision and recall. Next, we describe each of these major components in greater detail.
+
+### Model architectures
+
+### Data collection and preparation
+
+### Training setup 
+
+### Evaluation metrics
+
 How did you decide to solve the problem? What network architecture did you use? What data? Lots of details here about all the things you did. This section describes almost your whole project.
 
 Figures are good here. Maybe you present your network architecture or show some example data points?

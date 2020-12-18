@@ -76,7 +76,13 @@ Lastly, we have the Inception_v3 architecture, here is a figure from the [Incept
 
 ![alt text](https://github.com/minneker/transfer-learning-project/blob/main/images/inceptionv3.png?raw=true)
 
-[INSERT DESCRIPTION HERE]
+The architecture is essentially a standard CNN, however, there are nuances that allow for strong network performance. For example, the Inception blocks are based on a principle of reducing large convolutions, which saves computation without sacrificing performance. Additionally, auxiliary classifiers are used to improve the convergence of deep networks such as Inception_v3. 
+
+We trained two variants of Inception_v3:
+- Froze all weights besides last fully connected layer
+- Froze all weights besides last fully connected layer and auxiliary fully connected layer
+
+We chose the first option because it is common practice in transfer learning to simply train the last fully connected layer. We chose the second option because we wanted to see if retraining the last auxiliary layer had a significant effect on the performance, similar to our experiments on ResNet-50 and VGG-16.
 
 ### Data collection and preparation
 

@@ -22,6 +22,26 @@ We trained and compared 3 popular CNN-based architectures: ResNet-50, VGG-16 (wi
 
 ### Model architectures
 
+We used 3 popular architectures in the project: ResNet-50, VGG-16 and Inception_v3 (a.k.a GoogleNetv3). 
+
+We first discuss the ResNet-50 architecture, here is a figure from the [ResNet paper](https://arxiv.org/abs/1512.03385) describing the architecture:
+
+![alt text](https://github.com/minneker/transfer-learning-project/blob/main/images/resnet.png?raw=true)
+
+[INSERT DESCRIPTION HERE]
+
+Next we have the VGG-16 architecture, here is a figure from the [VGG paper](https://arxiv.org/abs/1409.1556) describing the architecture:
+
+![alt text](https://github.com/minneker/transfer-learning-project/blob/main/images/vgg.png?raw=true)
+
+[INSERT DESCRIPTION HERE]
+
+Lastly, we have the Inception_v3 architecture, here is a figure from the [Inception_v3 paper]() describing the architecture:
+
+![alt text](https://github.com/minneker/transfer-learning-project/blob/main/images/inceptionv3.png?raw=true)
+
+[INSERT DESCRIPTION HERE]
+
 ### Data collection and preparation
 
 ### Training setup 

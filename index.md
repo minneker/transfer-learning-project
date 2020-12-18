@@ -1,10 +1,12 @@
 ## Welcome to my final project page!
 
-Write a 3-4 sentence abstract. It should introduce the problem and your approach. You may also want some numbers like 35 mAP and 78% accuracy. You can use this example README for your project, you can use a different ordering for your website, or you can make a totally different website altogether!
+We set out to use deep transfer learning with popular convolutional neural network architectures to diagnose Parkinson's disease (PD) from images of handwritten spirals (i.e. classify healthy vs. PD spirals). We used popular image classification network weights, such as VGG-16, for transfer learning, and open source datasets such as the [UCI Machine Learning repository PD spiral dataset](https://archive.ics.uci.edu/ml/datasets/Parkinson+Disease+Spiral+Drawings+Using+Digitized+Graphics+Tablet) or this Kaggle [dataset](https://www.kaggle.com/kmader/parkinsons-drawings). Transfer learning is the method of choice because the datasets of PD spirals are very small (on the order of ~50 images per class); we show that [INSERT QUANT RESULT HERE].
 
-VIDEO GOES HERE (probably): Record a 2-3 minute long video presenting your work. One option - take all your figures/example images/charts that you made for your website and put them in a slide deck, then record the video over zoom or some other recording platform (screen record using Quicktime on Mac OS works well). The video doesn't have to be particularly well produced or anything.
+VIDEO GOES HERE (probably): [INSERT VIDEO HERE]
 
 ## Introduction
+
+Parkinson's disease (PD) is a progressive neurological disorder with no cure and unknown etiology. Treatment can help slow disease progression and increase quality of life if symptoms are detected early enough. A common [clinical test](https://pn.bmj.com/content/17/6/456) involves the patient drawing on a piece of paper, which the physician then examines for evidence of early signs of PD tremors. This is a classification problem that can be aided by deep learning, particularly there is an opportunity here to introduce quantitative analysis on a currently qualitative task; if effective, such methods could perform large scale diagnostics (e.g. via a mobile phone app) to help detect PD in early stages and help researchers and clinicians to understand, track and ultimately treat PD more effectively than current methods allow.
 
 In this section the problem you are working on. Maybe talk about why you thought it was interesting. Or why you think it needs to get solved.
 

@@ -26,9 +26,23 @@ We used 3 popular architectures in the project: ResNet-50, VGG-16 and Inception_
 
 We first discuss the ResNet-50 architecture, here is a figure from the [ResNet paper](https://arxiv.org/abs/1512.03385) describing the architecture:
 
-![alt text](https://github.com/minneker/transfer-learning-project/blob/main/images/resnet.png?raw=true)
+![image of the ResNet neural network architecture](https://github.com/minneker/transfer-learning-project/blob/main/images/resnet.png?raw=true)
 
-[INSERT DESCRIPTION HERE]
+The column to focus on is the "50-layer" column, which is the architecture used in this project. The architecture is essentially a 50 layer CNN, however, there are residual connections (i.e. shortcut-connections that skip one or more layers), in this network they perform an identity mapping. The main benefit to residual connections is they overcome the problem of degradation which is described by the authors succintly:
+
+> "When deeper networks are able to start converging, a
+degradation problem has been exposed: with the network
+depth increasing, accuracy gets saturated (which might be
+unsurprising) and then degrades rapidly. Unexpectedly,
+such degradation is not caused by overfitting, and adding
+more layers to a suitably deep model leads to higher training error, as reported in [11, 42] and thoroughly verified by
+our experiments. Fig. 1 shows a typical example."
+
+We trained two variants of ResNet-50: 
+- Froze all weights besides last FC
+- Froze all weights besides last FC and the last convolutional block
+
+We chose the first option because it is common practice in transfer learning to simply train the last fully connected layer. We chose the second option because early layers in CNNs tend to be more general feature extractors, and later layers tend to be more dataset specific; so our goal was to see if retraining the last convolutional block had a significant effect on the performance.
 
 Next we have the VGG-16 architecture, here is a figure from the [VGG paper](https://arxiv.org/abs/1409.1556) describing the architecture:
 
@@ -36,7 +50,7 @@ Next we have the VGG-16 architecture, here is a figure from the [VGG paper](http
 
 [INSERT DESCRIPTION HERE]
 
-Lastly, we have the Inception_v3 architecture, here is a figure from the [Inception_v3 paper]() describing the architecture:
+Lastly, we have the Inception_v3 architecture, here is a figure from the [Inception_v3 paper](https://arxiv.org/abs/1512.00567) describing the architecture:
 
 ![alt text](https://github.com/minneker/transfer-learning-project/blob/main/images/inceptionv3.png?raw=true)
 

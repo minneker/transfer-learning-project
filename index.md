@@ -48,7 +48,29 @@ Next we have the VGG-16 architecture, here is a figure from the [VGG paper](http
 
 ![alt text](https://github.com/minneker/transfer-learning-project/blob/main/images/vgg.png?raw=true)
 
-[INSERT DESCRIPTION HERE]
+The columns to focus on are the "C" and "D" configurations, which are the architectures used in this project. The architecture is essentially a 16 weight layer layer CNN, however, there are nuances that allow for strong network performance. For example, one such benefit is described by the authors for configuration C as the following:
+
+> "The incorporation of 1 × 1 conv. layers (configuration C, Table 1) is a way to increase the nonlinearity of the decision function without affecting the receptive fields of the conv. layers. Even though in our case the 1 × 1 convolution is essentially a linear projection onto the space of the same dimensionality (the number of input and output channels is the same), an additional non-linearity is introduced by the rectification function. It should be noted that 1×1 conv. layers have recently been utilised in the “Network in Network” architecture of Lin et al. (2014)"
+
+We trained two variants of VGG-16. The final output layer of VGG-16 has the following structure:
+
+```
+Sequential(
+  (0): Linear(in_features=25088, out_features=4096, bias=True)
+  (1): ReLU(inplace=True)
+  (2): Dropout(p=0.5, inplace=False)
+  (3): Linear(in_features=4096, out_features=4096, bias=True)
+  (4): ReLU(inplace=True)
+  (5): Dropout(p=0.5, inplace=False)
+  (6): Linear(in_features=4096, out_features=2, bias=True)
+)
+```
+
+The variants we trained were:
+- Froze all weights besides the very last FC layer, i.e. (6): Linear(in_features=4096, out_features=2, bias=True)
+- Froze all weights besides the last two FC layers, i.e. (3) and (6)
+
+We chose the first option because it is common practice in transfer learning to simply train the last fully connected layer. We chose the second option because we wanted to see if retraining the last two FC layers had a significant effect on the performance, similar to our experiments on ResNet-50.
 
 Lastly, we have the Inception_v3 architecture, here is a figure from the [Inception_v3 paper](https://arxiv.org/abs/1512.00567) describing the architecture:
 

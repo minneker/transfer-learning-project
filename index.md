@@ -146,6 +146,10 @@ data_transforms = {
 
 The test set loaders look identical to the validation loaders for all networks. Note we chose to have `batch_size=4` and `num_workers=4`. `batch_size` was kept constant for all experiments but future studies should definitely include variations of `batch_size` to measure their impact on transfer learning performance for this task.
 
+Here is an example of the data we are using:
+
+![Examples of training data, exhibiting PwP and Control Spirals](https://github.com/minneker/transfer-learning-project/blob/main/images/data_samples.png)
+
 ### Training and evaluation setup
 
 For training we followed the guidance of the transfer learning tutorial in the [PyTorch documentation](https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html). Specifically, we used: a `Cross Entropy` loss function, `Stochastic Gradient Descent (SGD)` with `lr=0.001, momentum=0.9`, a learning rate scheduler to decay the learning rate by 0.1 every 7 epochs i.e. `gamma=0.1` and `step_size=7`. We trained each network for `25 epochs`, wherein we calculated `training/validation loss` and `training/validation accuracy` after each epoch. After 25 epochs, we saved the best model (based on validation set accuracy). This saved model was then loaded and used for inference on the test set where we calculated `accuracy`, `F1 score`, `precision`, `recall`.
@@ -405,4 +409,8 @@ Here are the plots of accuracy and loss over the training epochs for each of the
 
 ## Discussion
 
-You can talk about your results and the stuff you've learned here if you want. Or discuss other things. Really whatever you want, it's your project.
+I am quite surprised at how well these network architectures performed given the limited amount of data available for training, validation and testing. I would like to say I think I did something wrong with the combined auxiliary and fc layer losses in the Inception_v3 model as apparent by the graph produced. If I had more time before the project deadline, I would try to fix this and see what went wrong. However, given that the auxiliary layer is created to prevent degradation in performance when training deep networks, I don't think it would beat/change the performance given that we are only training the last FC of Inception_v3, the auxiliary layer weights would likely become irrelevant because there is no degradation occuring when training the last fully connected layer. When looking at the loss and accuracy plots because evaluating the models on the test set, I thought that the VGG-16 architectures would perform better than they did and was very surprised that the Inception_v3 architecture seemed to pull ahead on test set performance. 
+
+I think moving forward it would be interesting to perform more experiments surrounding data augmentation. Since there are so few data samples, I think making the most of them might really improve model performance; after all: "Garbage in, garbage out." Our experiments here only scratch the surface of the field of transfer learning, and I think it would be interesting to explore more recent advancements such as `knowledge distillation` with a network such as [`MEAL_v2`](https://arxiv.org/pdf/2009.08453.pdf) which has been shown to boost model performance without changing model architecture and without introducing additional training data. 
+
+This project was a great experience to read literature, make decision based on recent work, and figure out implementation details relevant to common architectures and approaches to transfer learning. I learned a lot and had fun making this GitHub pages for the project, thanks for a great quarter!

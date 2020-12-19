@@ -1,8 +1,8 @@
 ## Welcome to my final project page!
 
-We set out to use deep transfer learning with popular convolutional neural network architectures to diagnose Parkinson's disease (PD) from images of handwritten spirals (i.e. classify healthy vs. PD spirals). We used popular image classification network weights, such as VGG-16, for transfer learning, and open source datasets such as the [UCI Machine Learning repository PD spiral dataset](https://archive.ics.uci.edu/ml/datasets/Parkinson+Disease+Spiral+Drawings+Using+Digitized+Graphics+Tablet) and this Kaggle [dataset](https://www.kaggle.com/kmader/parkinsons-drawings). Transfer learning is the method of choice because the datasets of PD spirals are very small (on the order of ~50 images per class); we show that [INSERT QUANT RESULT HERE].
+We set out to use deep transfer learning with popular convolutional neural network architectures to diagnose Parkinson's disease (PD) from images of handwritten spirals (i.e. classify healthy vs. PD spirals). We used popular image classification network weights, such as VGG-16, for transfer learning, and open source datasets such as the [UCI Machine Learning repository PD spiral dataset](https://archive.ics.uci.edu/ml/datasets/Parkinson+Disease+Spiral+Drawings+Using+Digitized+Graphics+Tablet) and this Kaggle [dataset](https://www.kaggle.com/kmader/parkinsons-drawings). Transfer learning is the method of choice because the datasets of PD spirals are very small (on the order of ~50 images per class); we show that we can achieve >=80% F1 score and Accuracy using only ~100 training data points.
 
-VIDEO GOES HERE (probably): [INSERT VIDEO HERE]
+[Zoom Cloud Recording of Project video here](https://washington.zoom.us/rec/share/_4YejjEANRhxBmEthlP9PdofsmO1TLZlft8_g6ijU9toP2rz2qzYaQMx_dlV-dPa.Up8FyLOSSQGymk3E?startTime=1608357296000)
 
 ## Introduction
 

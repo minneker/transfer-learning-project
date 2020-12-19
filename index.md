@@ -358,6 +358,50 @@ Here are the `F1 score`, `accuracy`, `precision` and `recall` for each model eva
 | VGG-16 (last FC)                  | 0.6316        | 0.6500    |0.7500       |0.5455    |
 | VGG-16 (last two FCs)             | 0.7407        | 0.6500    |0.6250       |0.9091    |
 
+Here are the plots of accuracy and loss over the training epochs for each of the model architectures:
+
+### ResNet-50 (last FC)
+
+<p float="left">
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/resnet50_fc_weight_optim_acc.png?raw=true" width="49%" />
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/resnet50_fc_weight_optim_loss.png?raw=true" width="49%" /> 
+</p>
+
+### ResNet-50 (last FC & layer 4) 
+
+<p float="left">
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/resnet50_fc_weight_and_layer4_optim_acc.png?raw=true" width="49%" />
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/resnet50_fc_weight_and_layer4_optim_loss.png?raw=true" width="49%" /> 
+</p>
+
+### Inception_v3 (FC)
+
+<p float="left">
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/inceptionv3_fc_optim_acc.png?raw=true" width="49%" />
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/inceptionv3_fc_optim_loss.png?raw=true" width="49%" /> 
+</p>
+
+### Inception_v3 (FC and aux)
+
+<p float="left">
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/inceptionv3_fc_and_auxlogits_fc_optim_acc.png?raw=true" width="49%" />
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/inceptionv3_fc_and_auxlogits_fc_optim_loss.png?raw=true" width="49%" /> 
+</p>
+
+### VGG-16 (last FC)
+
+<p float="left">
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/vgg16_bn_final_fc_weight_acc.png?raw=true" width="49%" />
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/vgg16_bn_final_fc_weight_loss.png?raw=true" width="49%" /> 
+</p>
+
+### VGG-16 (last two FCs) 
+
+<p float="left">
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/vgg16_bn_last_two_fc_weights_acc.png?raw=true" width="49%" />
+  <img src="https://github.com/minneker/transfer-learning-project/blob/main/images/vgg16_bn_last_two_fc_weights_loss.png?raw=true" width="49%" /> 
+</p>
+
 
 ## Discussion
 

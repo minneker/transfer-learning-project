@@ -97,20 +97,267 @@ We used two Parkinson's spiral datasets as described earlier: [UCI Machine Learn
 - Testing
   - Control: 9
   - PwP: 11
+  
+We used a `DataLoader` for each dataset (train/val/test), for ease of loading and transforming data to the correct input size, etc. For both VGG-16 and ResNet-50 we used the following dataloaders:
 
-### Training setup 
+```
+data_transforms = {
+    'train': transforms.Compose([
+        transforms.RandomResizedCrop(224),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+    'val': transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+}
+
+image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
+                                          data_transforms[x]) for x in ['train', 'val']}
+dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
+                                             shuffle=True, num_workers=4) for x in ['train', 'val']}
+```
+
+For Inception_v3, the network requires mini-batches of 3-channel RGB images of shape `(3 x H x W)`, `H` and `W` are expected to be at least 299. So our transformation changed to the following:
+
+```
+data_transforms = {
+    'train': transforms.Compose([
+        transforms.Resize(299),
+        transforms.CenterCrop(299),
+        transforms.RandomResizedCrop(299),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ]),
+    'val': transforms.Compose([
+        transforms.Resize(299),
+        transforms.CenterCrop(299),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ]),
+}
+
+```
+
+The test set loaders look identical to the validation loaders for all networks. Note we chose to have `batch_size=4` and `num_workers=4`. `batch_size` was kept constant for all experiments but future studies should definitely include variations of `batch_size` to measure their impact on transfer learning performance for this task.
+
+### Training and evaluation setup
+
+For training we followed the guidance of the transfer learning tutorial in the [PyTorch documentation](https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html). Specifically, we used: a `Cross Entropy` loss function, `Stochastic Gradient Descent (SGD)` with `lr=0.001, momentum=0.9`, a learning rate scheduler to decay the learning rate by 0.1 every 7 epochs i.e. `gamma=0.1` and `step_size=7`. We trained each network for `25 epochs`, wherein we calculated `training/validation loss` and `training/validation accuracy` after each epoch. After 25 epochs, we saved the best model (based on validation set accuracy). This saved model was then loaded and used for inference on the test set where we calculated `accuracy`, `F1 score`, `precision`, `recall`.
+
+The general model setup looked like:
+
+```
+# Load pretrained model and replace FC layer(s) to match our binary classification problem
+
+# Require grad only on the layer(s) of interest
+
+# Train the model!
+```
+
+For clarity we list all conditions tested below, where we assume the following are constant:
+
+```
+# Cross entropy loss function
+criterion = nn.CrossEntropyLoss()
+
+# SGD optimizer
+optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
+
+# Decay LR by a factor of 0.1 every 7 epochs
+exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
+
+```
+
+#### ResNet-50
+
+Last FC layer only:
+
+```
+model_ft = models.resnet50(pretrained=True)
+num_ftrs = model_ft.fc.in_features
+model_ft.fc = nn.Linear(num_ftrs, 2)
+
+model_ft = model_ft.to(device)
+
+# Observe that __a subset of__ parameters are being optimized
+for name, params in model_ft.named_parameters():
+    if name != 'fc.weight':
+        params.requires_grad=False
+optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
+
+model_name = 'resnet50_fc_weight_optim'
+model_ft = train_model(model_ft, 
+                       criterion, 
+                       optimizer_ft, 
+                       exp_lr_scheduler, 
+                       model_name,
+                       num_epochs=25)
+
+torch.save(model_ft.state_dict(), model_dir + model_name)
+```
+
+Last FC layer and all of layer 4 (we only show the difference to avoid redundancy):
+
+```
+# Observe that **A subset of** parameters are being optimized
+for name, params in model_ft.named_parameters():
+    if name != 'fc.weight' and not name.startswith('layer4'):
+        params.requires_grad=False
+```
+
+#### Inception_v3
+
+Last FC and Auxiliary FC:
+
+```
+model_ft = models.inception_v3(pretrained=True)
+num_ftrs = model_ft.fc.in_features
+model_ft.fc = nn.Linear(num_ftrs, 2)
+model_ft = model_ft.to(device)
+
+# Observe that **A subset of** parameters are being optimized
+for name, params in model_ft.named_parameters():
+    if name != 'fc.weight' and name != 'AuxLogits.fc.weight':
+        params.requires_grad=False
+
+model_name = 'inceptionv3_fc_and_auxlogits_fc_optim'
+model_ft = train_inception(model_ft, 
+                           criterion, 
+                           optimizer_ft, 
+                           exp_lr_scheduler, 
+                           model_name,
+                           num_epochs=25)
+
+torch.save(model_ft.state_dict(), model_dir + model_name)
+```
+
+Notice that we used `train_inception` here which accounted for the auxiliary loss as well during training, as follows:
+
+```
+# forward
+# track history if only in train
+with torch.set_grad_enabled(phase == 'train'):
+    if phase == 'val':
+        outputs = model(inputs)
+        _, preds = torch.max(outputs, 1)
+        loss = criterion(outputs, preds)
+    else:  # in training mode
+        outputs, aux_outputs = model(inputs)
+        _, preds = torch.max(outputs, 1)
+        loss1 = criterion(outputs, preds)
+        loss2 = criterion(aux_outputs, preds)
+        loss = loss1 + 0.4*loss2
+
+        # backward + optimize only if in training phase
+        loss.backward() 
+        optimizer.step()
+```
+
+The combined loss function is necessay when training the auxiliary layers, that is why the combined loss function was used in this case. Note that `aux_logits=True` by default in the model declaration so they are used in this `Inception_v3` instance.
+
+Last FC only:
+
+```
+model_ft = models.inception_v3(pretrained=True, aux_logits=False)
+num_ftrs = model_ft.fc.in_features
+model_ft.fc = nn.Linear(num_ftrs, 2)
+model_ft = model_ft.to(device)
+
+
+# Observe that **A subset of** parameters are being optimized
+for name, params in model_ft.named_parameters():
+    if name != 'fc.weight':
+        params.requires_grad=False
+
+model_name = 'inceptionv3_fc_optim'
+model_ft = train_model(model_ft, 
+                       criterion, 
+                       optimizer_ft, 
+                       exp_lr_scheduler, 
+                       model_name,
+                       num_epochs=25)
+
+torch.save(model_ft.state_dict(), model_dir + model_name)
+```
+Note that `aux_logits=False` is used so we no longer need a combined loss function since the auxiliary layers are no longer used in training so we call `train_model` instead of `train_inception`.
+
+#### VGG-16
+
+Last FC only:
+
+```
+model_ft = models.vgg16_bn(pretrained=True)
+num_ftrs = model_ft.classifier[6].in_features
+model_ft.classifier[6] = nn.Linear(num_ftrs, 2) # replace last fc layer
+model_ft = model_ft.to(device)
+
+
+# Observe that **A subset of** parameters are being optimized
+for name, params in model_ft.named_parameters():
+    if name != 'classifier.6.weight':
+        params.requires_grad=False
+
+model_name = 'vgg16_bn_final_fc_weight'
+model_ft = train_model(model_ft, 
+                       criterion, 
+                       optimizer_ft, 
+                       exp_lr_scheduler, 
+                       model_name,
+                       num_epochs=25)
+
+torch.save(model_ft.state_dict(), model_dir + model_name)
+```
+
+Last two FC layers:
+
+```
+model_ft = models.vgg16_bn(pretrained=True)
+num_ftrs = model_ft.classifier[6].in_features
+model_ft.classifier[3] = nn.Linear(num_ftrs, num_ftrs) # replace 2nd to last layer
+model_ft.classifier[6] = nn.Linear(num_ftrs, 2) # replace last fc layer
+model_ft = model_ft.to(device)
+
+
+# Observe that **A subset of** parameters are being optimized
+for name, params in model_ft.named_parameters():
+    if name != 'classifier.6.weight' and name != 'classifier.3.weight':
+        params.requires_grad=False
+
+model_name = 'vgg16_bn_last_two_fc_weights'
+model_ft = train_model(model_ft, 
+                       criterion, 
+                       optimizer_ft, 
+                       exp_lr_scheduler, 
+                       model_name,
+                       num_epochs=25)
+
+torch.save(model_ft.state_dict(), model_dir + model_name)
+```
+
 
 ### Evaluation metrics
 
-How did you decide to solve the problem? What network architecture did you use? What data? Lots of details here about all the things you did. This section describes almost your whole project.
-
-Figures are good here. Maybe you present your network architecture or show some example data points?
+For each of the models in the previous section we plotted the training and validation loss and accuracy curves over the 25 epochs. The best performing model based on validation accuracy from the 25 epochs was evaluated against the test set via `F1 score`, `accuracy`, `precision` and `recall`. The results are summarized in the next section.
 
 ## Results
 
-How did you evaluate your approach? How well did you do? What are you comparing to? Maybe you want ablation studies or comparisons of different methods.
+Here are the `F1 score`, `accuracy`, `precision` and `recall` for each model evaluated against the test set:
+  
+| Model                             | F1            | Accuracy  | Precision   | Recall   |
+| ----------------------------------|---------------|-----------|-------------|----------|
+| ResNet-50 (last FC)               | 0.7778        | **0.8000**|**1.0000**   |0.6364    |
+| ResNet-50 (last FC & layer 4)     | 0.7619        | 0.7500    |0.8000       |0.7273    |
+| Inception_v3 (FC)                 | **0.8333**    | **0.8000**|0.7692       |0.9091    |
+| Inception_v3 (FC and aux)         | 0.7097        | 0.5500    |0.5500       |**1.0000**|
+| VGG-16 (last FC)                  | 0.6316        | 0.6500    |0.7500       |0.5455    |
+| VGG-16 (last two FCs)             | 0.7407        | 0.6500    |0.6250       |0.9091    |
 
-You may want some qualitative results and quantitative results. Example images/text/whatever are good. Charts are also good. Maybe loss curves or AUC charts. Whatever makes sense for your evaluation.
 
 ## Discussion
 

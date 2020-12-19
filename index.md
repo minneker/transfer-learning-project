@@ -148,7 +148,7 @@ The test set loaders look identical to the validation loaders for all networks. 
 
 Here is an example of the data we are using:
 
-![Examples of training data, exhibiting PwP and Control Spirals](https://github.com/minneker/transfer-learning-project/blob/main/images/data_samples.png)
+![Examples of training data, exhibiting PwP and Control Spirals](https://github.com/minneker/transfer-learning-project/blob/main/images/data_samples.png?raw=true)
 
 ### Training and evaluation setup
 

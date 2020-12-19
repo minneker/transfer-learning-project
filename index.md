@@ -414,3 +414,6 @@ I am quite surprised at how well these network architectures performed given the
 I think moving forward it would be interesting to perform more experiments surrounding data augmentation. Since there are so few data samples, I think making the most of them might really improve model performance; after all: "Garbage in, garbage out." Our experiments here only scratch the surface of the field of transfer learning, and I think it would be interesting to explore more recent advancements such as `knowledge distillation` with a network such as [`MEAL_v2`](https://arxiv.org/pdf/2009.08453.pdf) which has been shown to boost model performance without changing model architecture and without introducing additional training data. 
 
 This project was a great experience to read literature, make decision based on recent work, and figure out implementation details relevant to common architectures and approaches to transfer learning. I learned a lot and had fun making this GitHub pages for the project, thanks for a great quarter!
+
+## Google Colab Demo!
+Go to this [Colab notebook](https://colab.research.google.com/drive/1mGcauhLj46QHtc9IfHRZqj9qHkY1VzHW?usp=sharing) and follow along (using your UW GDrive credentials) to try out the inception_v3 model on some of your own spirals!
